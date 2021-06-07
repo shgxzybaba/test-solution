@@ -1,4 +1,4 @@
-package com.shgxzybaba.testsolution.model;
+package com.shgxzybaba.testsolution.model.entity;
 
 import com.shgxzybaba.testsolution.enums.Role;
 import com.shgxzybaba.testsolution.enums.Status;
