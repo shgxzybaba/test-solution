@@ -57,8 +57,10 @@ public class DefaultUserService implements UserService{
     }
 
     @Override
-    public void deleteUser(UserApiModel user) {
-
+    public void deleteUser(UserApiModel request) {
+        User user = userRepository.findByEmailAndStatus(request.getEmail(), Status.VERIFIED); //todo: verify if user exists
+        user.setStatus(Status.DEACTIVATED);
+        userRepository.save(user);
     }
 
     @Override

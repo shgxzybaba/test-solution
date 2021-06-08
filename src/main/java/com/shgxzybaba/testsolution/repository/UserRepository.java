@@ -10,4 +10,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserRepository extends CrudRepository<User,Long> {
     Page<User> findByStatus(Status status, Pageable pageable);
+    User findByEmailAndStatus(String email, Status status);
 }
