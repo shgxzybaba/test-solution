@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
@@ -21,7 +22,8 @@ public class EmailService {
         this.javaMailSender = javaMailSender;
     }
 
-    private void sendEmail(String content, String subject, String receiverMailAddress) {
+    @Async
+    public void sendEmail(String content, String subject, String receiverMailAddress) {
         MimeMessage msg = javaMailSender.createMimeMessage();
         try {
             MimeMessageHelper helper = new MimeMessageHelper(msg, false);
