@@ -1,5 +1,6 @@
 package com.shgxzybaba.testsolution.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.shgxzybaba.testsolution.enums.Role;
 import com.shgxzybaba.testsolution.enums.Status;
 import lombok.Data;
@@ -29,6 +30,7 @@ public class User {
     @NotBlank
     private String mobile;
     @NotBlank
+    @JsonIgnore
     private String password;
     private boolean verified;
 

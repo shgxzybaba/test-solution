@@ -1,5 +1,6 @@
 package com.shgxzybaba.testsolution.model.apimodel;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.shgxzybaba.testsolution.enums.Role;
 import com.shgxzybaba.testsolution.enums.Status;
 import com.shgxzybaba.testsolution.model.entity.User;
@@ -23,6 +24,8 @@ public class UserApiModel {
     private String email;
     private String mobile;
     private boolean verified;
+
+    @JsonIgnore
     private String password;
 
     private Role role;
