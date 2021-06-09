@@ -99,6 +99,7 @@ public class DefaultUserService {
     public void deleteUser(UserApiModel request) throws UserNotFoundException {
         User user = getUser(request.getEmail(), Status.VERIFIED);
         user.setStatus(Status.DEACTIVATED);
+        user.setDateDeactivated(LocalDateTime.now());
         userRepository.save(user);
         sendDeactivationMail(user.getEmail());
     }
@@ -120,6 +121,8 @@ public class DefaultUserService {
     public void verifyUser(String email) throws UserNotFoundException {
         User user = getUser(email, Status.REGISTERED);
         user.setStatus(Status.VERIFIED);
+        user.setDateVerified(LocalDateTime.now());
+        user.setVerified(true);
         userRepository.save(user);
 
     }

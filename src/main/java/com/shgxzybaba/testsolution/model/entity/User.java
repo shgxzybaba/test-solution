@@ -25,6 +25,8 @@ public class User {
     private String firstname;
     @NotBlank
     private String lastname;
+
+    @Column(unique = true)
     @Email(message = "Email supplied must be a valid email address i.e example@xyz.com")
     private String email;
     @NotBlank

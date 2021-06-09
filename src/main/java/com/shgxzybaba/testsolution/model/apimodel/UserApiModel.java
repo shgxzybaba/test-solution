@@ -1,12 +1,13 @@
 package com.shgxzybaba.testsolution.model.apimodel;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.shgxzybaba.testsolution.enums.Role;
 import com.shgxzybaba.testsolution.enums.Status;
 import com.shgxzybaba.testsolution.model.entity.User;
 import lombok.Data;
 import org.springframework.beans.BeanUtils;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 
 /**
@@ -21,11 +22,13 @@ public class UserApiModel {
 
     private String firstname;
     private String lastname;
+
+    @NotBlank(message = "Email address cannot be blank!")
+    @Email(message = "A valid email address must be supplied!")
     private String email;
     private String mobile;
     private boolean verified;
 
-    @JsonIgnore
     private String password;
 
     private Role role;

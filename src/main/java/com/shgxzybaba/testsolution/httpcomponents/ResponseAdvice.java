@@ -1,6 +1,7 @@
 package com.shgxzybaba.testsolution.httpcomponents;
 
 
+import com.shgxzybaba.testsolution.exceptions.ApiException;
 import com.shgxzybaba.testsolution.exceptions.InvalidDataException;
 import com.shgxzybaba.testsolution.exceptions.UserNotFoundException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -30,7 +31,7 @@ import java.util.stream.Collectors;
 @RestControllerAdvice
 public class ResponseAdvice implements ResponseBodyAdvice<Object> {
 
-    @ExceptionHandler({UserNotFoundException.class, InvalidDataException.class})
+    @ExceptionHandler({UserNotFoundException.class, InvalidDataException.class, ApiException.class})
     public ResponseEntity<Object> handleControllerException(Exception exception, WebRequest request) {
         HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
         int httpCode = status.value();
