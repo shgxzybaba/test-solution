@@ -38,7 +38,7 @@ public class ResponseAdvice implements ResponseBodyAdvice<Object> {
         return new ResponseEntity<>(responseBody, status);
     }
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ExceptionHandler({MethodArgumentNotValidException.class, IllegalArgumentException.class})
     public ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, WebRequest request) {
         HttpStatus status = HttpStatus.BAD_REQUEST;
         ApiResponseBody responseBody = ResponseBuilder.buildResponse(ex, status.value());
