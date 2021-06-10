@@ -74,7 +74,7 @@ class DefaultUserServiceTest {
     }
 
     @Test
-    void createUser_null_mail() throws InvalidDataException {
+    void createUser_null_mail() {
         testModel.setEmail(null);
         assertThrows(InvalidDataException.class, () -> userService.createUser(testModel));
     }
@@ -88,13 +88,13 @@ class DefaultUserServiceTest {
     }
 
     @Test
-    void updateUser_email_non_existent() throws UserNotFoundException {
+    void updateUser_email_non_existent() {
         when(userRepository.findByEmailAndStatus(anyString(), any(Status.class))).thenReturn(null);
         assertThrows(UserNotFoundException.class, () ->userService.updateUser(1L, testModel));
     }
 
     @Test
-    void updateUser() throws UserNotFoundException {
+    void updateUser() {
         when(userRepository.findById(anyLong())).thenReturn(Optional.of(mock(User.class)));
         assertDoesNotThrow( () -> userService.updateUser(1L, testModel));
     }
@@ -105,7 +105,7 @@ class DefaultUserServiceTest {
     void deleteUser() throws UserNotFoundException {
         User user = mock(User.class);
         when(userRepository.findById(anyLong())).thenReturn(Optional.of(user));
-        userService.deleteUser(1l);
+        userService.deleteUser(1L);
         verify(user).setStatus(Status.DEACTIVATED);
 
     }
@@ -120,7 +120,7 @@ class DefaultUserServiceTest {
     }
 
     @Test
-    void verifyUser_user_nonExistent() throws UserNotFoundException {
+    void verifyUser_user_nonExistent() {
         when(userRepository.findByEmailAndStatus(anyString(), any(Status.class))).thenReturn(null);
         assertThrows(UserNotFoundException.class, () ->userService.verifyUser("xyzUser"));
 
