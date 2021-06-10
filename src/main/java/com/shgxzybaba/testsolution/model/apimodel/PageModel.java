@@ -8,9 +8,9 @@ import javax.validation.constraints.Min;
 @Data
 @AllArgsConstructor
 public class PageModel {
-    int page;
+    private int page;
     @Min(value = 1, message = "Page size cannot be less than one")
-    int pageSize;
+    private int pageSize;
 
 
 }

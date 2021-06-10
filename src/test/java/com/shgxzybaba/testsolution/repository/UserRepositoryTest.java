@@ -2,7 +2,6 @@ package com.shgxzybaba.testsolution.repository;
 
 import com.shgxzybaba.testsolution.enums.Status;
 import com.shgxzybaba.testsolution.model.entity.User;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,7 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
@@ -45,12 +44,12 @@ class UserRepositoryTest {
     void findByStatus() {
 
         Page<User> users = userRepository.findByStatus(Status.REGISTERED, Pageable.ofSize(3));
-        Assertions.assertThat(users.getTotalElements()).isEqualTo(1);
+        assertThat(users.getTotalElements()).isEqualTo(1);
     }
 
     @Test
     void findByEmailAndStatus() {
         User user = userRepository.findByEmailAndStatus("xyz@mail.com", Status.REGISTERED);
-        Assertions.assertThat(user).isNotNull();
+        assertThat(user).isNotNull();
     }
 }

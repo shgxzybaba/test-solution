@@ -7,7 +7,6 @@ import com.shgxzybaba.testsolution.model.apimodel.PageModel;
 import com.shgxzybaba.testsolution.model.apimodel.UserApiModel;
 import com.shgxzybaba.testsolution.model.entity.User;
 import com.shgxzybaba.testsolution.repository.UserRepository;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,7 +22,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
@@ -32,17 +33,17 @@ import static org.mockito.Mockito.*;
 class DefaultUserServiceTest {
 
     @Mock
-    UserRepository userRepository;
+    private UserRepository userRepository;
     @Mock
-    PasswordEncoder encoder;
+    private PasswordEncoder encoder;
     @Mock
-    EmailService emailService;
+    private EmailService emailService;
 
     @InjectMocks
-    DefaultUserService userService;
+    private DefaultUserService userService;
 
     UserApiModel testModel;
-    List<User> testUsers;
+    private List<User> testUsers;
 
     @BeforeEach
     void setUp() {
@@ -74,7 +75,7 @@ class DefaultUserServiceTest {
     }
 
     @Test
-    void createUser_null_mail() {
+    void createUserNullMail() {
         testModel.setEmail(null);
         assertThrows(InvalidDataException.class, () -> userService.createUser(testModel));
     }
@@ -82,13 +83,13 @@ class DefaultUserServiceTest {
     @Test
     void getUsers() {
        Page<User> users = userService.getUsers(new PageModel(0, 4));
-       Assertions.assertThat(users.getTotalElements())
+       assertThat(users.getTotalElements())
                .isEqualTo(2L);
 
     }
 
     @Test
-    void updateUser_email_non_existent() {
+    void updateUserEmailNonExistent() {
         when(userRepository.findByEmailAndStatus(anyString(), any(Status.class))).thenReturn(null);
         assertThrows(UserNotFoundException.class, () ->userService.updateUser(1L, testModel));
     }
@@ -120,13 +121,13 @@ class DefaultUserServiceTest {
     }
 
     @Test
-    void verifyUser_user_nonExistent() {
+    void verifyUserUserNonExistent() {
         when(userRepository.findByEmailAndStatus(anyString(), any(Status.class))).thenReturn(null);
         assertThrows(UserNotFoundException.class, () ->userService.verifyUser("xyzUser"));
 
     }
 
-    void initializeUser() {
+    private void initializeUser() {
         testModel = new UserApiModel();
         testModel.setTitle("ti");
         testModel.setMobile("xxx");
