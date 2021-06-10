@@ -109,6 +109,22 @@ class DefaultUserServiceTest {
 
     }
 
+    @Test
+    void verifyUser() throws UserNotFoundException {
+        User user = mock(User.class);
+        when(userRepository.findByEmailAndStatus(anyString(), any(Status.class))).thenReturn(user);
+        userService.verifyUser("xyzUser");
+        verify(user).setStatus(Status.VERIFIED);
+
+    }
+
+    @Test
+    void verifyUser_user_nonExistent() throws UserNotFoundException {
+        when(userRepository.findByEmailAndStatus(anyString(), any(Status.class))).thenReturn(null);
+        assertThrows(UserNotFoundException.class, () ->userService.verifyUser("xyzUser"));
+
+    }
+
     void initializeUser() {
         testModel = new UserApiModel();
         testModel.setTitle("ti");
