@@ -1,19 +1,16 @@
 package com.shgxzybaba.testsolution.controller;
 
 import com.shgxzybaba.testsolution.exceptions.ApiException;
-import com.shgxzybaba.testsolution.exceptions.InvalidDataException;
-import com.shgxzybaba.testsolution.exceptions.UserNotFoundException;
 import com.shgxzybaba.testsolution.model.apimodel.PageModel;
 import com.shgxzybaba.testsolution.model.apimodel.UserApiModel;
 import com.shgxzybaba.testsolution.model.entity.User;
 import com.shgxzybaba.testsolution.service.DefaultUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/users")
+@RequestMapping("/api")
 public class UserController {
 
     private final DefaultUserService userService;
@@ -23,7 +20,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping("/create")
+    @PostMapping("/user")
     @ResponseBody
     public void createUser(@RequestBody UserApiModel userApiModel) throws ApiException {
         try {
@@ -33,30 +30,31 @@ public class UserController {
         }
     }
 
-    @PostMapping("/update")
+    @PutMapping("/user/{id}")
     @ResponseBody
-    public void updateUser(@RequestBody UserApiModel userApiModel) throws ApiException {
+    public void updateUser(@PathVariable long id, @RequestBody UserApiModel request) throws ApiException {
         try {
-            userService.updateUser(userApiModel);
+            userService.updateUser(id, request);
         } catch (Exception e) {
             throw new ApiException(e.getMessage());
         }
     }
 
-    @PostMapping("/deactivate")
+    @DeleteMapping("/user/{id}")
     @ResponseBody
-    public void deactivateUser(@RequestBody UserApiModel userApiModel) throws ApiException {
+    public void deactivateUser(@PathVariable long id) throws ApiException {
         try {
-            userService.deleteUser(userApiModel);
+            userService.deleteUser(id);
         } catch (Exception e) {
             throw new ApiException(e.getMessage());
         }
     }
 
-    @PostMapping("/all")
+    @GetMapping("/users")
     @ResponseBody
-    public Page<User> getAllUsers(@RequestBody @Validated PageModel request) throws ApiException {
+    public Page<User> getAllUsers(@RequestParam int page, @RequestParam int pageSize) throws ApiException {
         try {
+            PageModel request = new PageModel(page, pageSize);
             return userService.getUsers(request);
         } catch (Exception e) {
             throw new ApiException(e.getMessage());

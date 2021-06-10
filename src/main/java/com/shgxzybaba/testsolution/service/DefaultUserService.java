@@ -88,8 +88,8 @@ public class DefaultUserService {
     }
 
 
-    public void updateUser(UserApiModel request) throws UserNotFoundException {
-        User user = getUser(request.getEmail(), Status.VERIFIED);
+    public void updateUser(long id, UserApiModel request) throws UserNotFoundException {
+        User user = getUser(id);
 
         if (StringUtils.isNotBlank(request.getFirstname())) {
             user.setFirstname(request.getFirstname());
@@ -112,8 +112,8 @@ public class DefaultUserService {
     }
 
 
-    public void deleteUser(UserApiModel request) throws UserNotFoundException {
-        User user = getUser(request.getEmail(), Status.VERIFIED);
+    public void deleteUser(long id) throws UserNotFoundException {
+        User user = getUser(id);
         user.setStatus(Status.DEACTIVATED);
         user.setDateDeactivated(LocalDateTime.now());
         userRepository.save(user);
@@ -134,7 +134,7 @@ public class DefaultUserService {
         }
     }
 
-    public void verifyUser(String email) throws UserNotFoundException {
+    public void  verifyUser(String email) throws UserNotFoundException {
         User user = getUser(email, Status.REGISTERED);
         user.setStatus(Status.VERIFIED);
         user.setDateVerified(LocalDateTime.now());
@@ -145,6 +145,16 @@ public class DefaultUserService {
 
     private User getUser(String email, Status status) throws UserNotFoundException {
         User user = userRepository.findByEmailAndStatus(email, status);
+
+        if (user == null) {
+            throw new UserNotFoundException("Invalid email address supplied!");
+        }
+
+        return user;
+    }
+
+    private User getUser(long id) throws UserNotFoundException {
+        User user = userRepository.findById(id).orElse(null);
 
         if (user == null) {
             throw new UserNotFoundException("Invalid email address supplied!");

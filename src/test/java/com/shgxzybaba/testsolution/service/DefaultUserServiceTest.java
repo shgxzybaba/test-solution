@@ -21,6 +21,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -89,13 +90,13 @@ class DefaultUserServiceTest {
     @Test
     void updateUser_email_non_existent() throws UserNotFoundException {
         when(userRepository.findByEmailAndStatus(anyString(), any(Status.class))).thenReturn(null);
-        assertThrows(UserNotFoundException.class, () ->userService.updateUser(testModel));
+        assertThrows(UserNotFoundException.class, () ->userService.updateUser(1L, testModel));
     }
 
     @Test
     void updateUser() throws UserNotFoundException {
-        when(userRepository.findByEmailAndStatus(anyString(), any(Status.class))).thenReturn(mock(User.class));
-        assertDoesNotThrow( () -> userService.updateUser(testModel));
+        when(userRepository.findById(anyLong())).thenReturn(Optional.of(mock(User.class)));
+        assertDoesNotThrow( () -> userService.updateUser(1L, testModel));
     }
 
 
@@ -103,8 +104,8 @@ class DefaultUserServiceTest {
     @Test
     void deleteUser() throws UserNotFoundException {
         User user = mock(User.class);
-        when(userRepository.findByEmailAndStatus(anyString(), any(Status.class))).thenReturn(user);
-        userService.deleteUser(testModel);
+        when(userRepository.findById(anyLong())).thenReturn(Optional.of(user));
+        userService.deleteUser(1l);
         verify(user).setStatus(Status.DEACTIVATED);
 
     }
