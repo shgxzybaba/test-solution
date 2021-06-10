@@ -26,32 +26,48 @@ public class DefaultUserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
-    private final String emailContent;
-    private final String emailSubject;
-    private final String verificationUrl;
-    private final String emailDeactivationSubject;
-    private final String emailDeactivationContent;
+    private String emailContent;
+    private String emailSubject;
+    private String verificationUrl;
+    private String emailDeactivationSubject;
+    private String emailDeactivationContent;
 
     @Autowired
-    public DefaultUserService(PasswordEncoder passwordEncoder,UserRepository userRepository, EmailService emailService,
-                              @Value("${test.email.content}") String emailContent,
-                              @Value("${test.email.subject}") String emailSubject,
-                              @Value("${test.verification.url}") String verificationUrl,
-                              @Value("${test.email.content}") String emailDeactivationContent,
-                              @Value("${test.email.subject}") String emailDeactivationSubject
-                              )
-    {
+    public DefaultUserService(PasswordEncoder passwordEncoder, UserRepository userRepository, EmailService emailService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.emailService = emailService;
+
+    }
+
+    //using setter injection here to ease testing
+
+    @Autowired
+    public void setEmailContent(@Value("${test.email.content}") String emailContent) {
         this.emailContent = emailContent;
+    }
+
+    @Autowired
+    public void setEmailSubject(@Value("${test.email.subject}") String emailSubject) {
         this.emailSubject = emailSubject;
+    }
+
+    @Autowired
+    public void setVerificationUrl(@Value("${test.verification.url}") String verificationUrl) {
         this.verificationUrl = verificationUrl;
-        this.emailDeactivationContent = emailDeactivationContent;
+    }
+
+    @Autowired
+    public void setEmailDeactivationSubject(@Value("${test.email-deactivation.subject}") String emailDeactivationSubject) {
         this.emailDeactivationSubject = emailDeactivationSubject;
     }
 
-    
+    @Autowired
+    public void setEmailDeactivationContent(@Value("${test.email-deactivation.content}") String emailDeactivationContent) {
+        this.emailDeactivationContent = emailDeactivationContent;
+    }
+
+
     public void createUser(UserApiModel request) throws InvalidDataException {
 
         if (StringUtils.isBlank(request.getEmail()) || StringUtils.isBlank(request.getPassword())) {
@@ -66,12 +82,12 @@ public class DefaultUserService {
         sendVerificationMail(request.getEmail());
     }
 
-    
+
     public Page<User> getUsers(PageModel page) {
         return userRepository.findByStatus(Status.VERIFIED, PageRequest.of(page.getPage(), page.getPageSize()));
     }
 
-    
+
     public void updateUser(UserApiModel request) throws UserNotFoundException {
         User user = getUser(request.getEmail(), Status.VERIFIED);
 
@@ -95,7 +111,7 @@ public class DefaultUserService {
 
     }
 
-    
+
     public void deleteUser(UserApiModel request) throws UserNotFoundException {
         User user = getUser(request.getEmail(), Status.VERIFIED);
         user.setStatus(Status.DEACTIVATED);
@@ -111,7 +127,7 @@ public class DefaultUserService {
     public void sendVerificationMail(String email) throws InvalidDataException {
         try {
             String encodedEmail = URLEncoder.encode(email, StandardCharsets.UTF_8.toString());
-            String finalContent = String.format(emailContent,verificationUrl, encodedEmail);
+            String finalContent = String.format(emailContent, verificationUrl, encodedEmail);
             emailService.sendEmail(finalContent, emailSubject, email);
         } catch (UnsupportedEncodingException e) {
             throw new InvalidDataException("An error occurred while sending verification email");
@@ -134,6 +150,6 @@ public class DefaultUserService {
             throw new UserNotFoundException("Invalid email address supplied!");
         }
 
-        return  user;
+        return user;
     }
 }
